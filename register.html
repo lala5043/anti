@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Agriculture Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div class="auth-wrapper" style="padding: 40px 20px;">
+        <div class="glass-panel auth-card" style="max-width: 500px;">
+            <h2>Create an Account</h2>
+            <p>Join the agriculture community to buy or sell produce.</p>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Account Type</label>
+                    <div style="display: flex; gap: 10px;">
+                        <label style="flex: 1; display:flex; align-items:center; gap:8px; font-weight: normal; cursor:pointer;" class="glass-panel" style="padding: 10px;">
+                            <input type="radio" name="role" value="buyer" checked> Buyer
+                        </label>
+                        <label style="flex: 1; display:flex; align-items:center; gap:8px; font-weight: normal; cursor:pointer;" class="glass-panel" style="padding: 10px;">
+                            <input type="radio" name="role" value="farmer"> Farmer
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="name" class="form-control" required placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" class="form-control" required placeholder="name@example.com">
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="phone" class="form-control" required placeholder="e.g., +1 234 567 8900">
+                </div>
+
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="password" class="form-control" required placeholder="••••••••">
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 10px;">Create Account</button>
+            </form>
+
+            <p style="margin-top: 25px; margin-bottom: 0;">Already have an account? <a href="login.html" class="link">Login here</a></p>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

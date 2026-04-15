@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - Agriculture Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hero-container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            background: var(--bg-color);
+        }
+        
+        /* Dynamic SVG Background */
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2310b981' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            animation: panBg 40s linear infinite;
+        }
+
+        .blob-1, .blob-2 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            animation: float 12s infinite ease-in-out alternate;
+        }
+        .blob-1 {
+            background: rgba(16, 185, 129, 0.4);
+            width: 500px; height: 500px;
+            top: -10%; right: -5%;
+        }
+        .blob-2 {
+            background: rgba(245, 158, 11, 0.3);
+            width: 400px; height: 400px;
+            bottom: -10%; left: -5%;
+            animation-delay: -5s;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: left;
+            max-width: 650px;
+            padding: 40px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            margin-top: 60px;
+        }
+
+        .hero h1 { 
+            font-size: 4.5rem; 
+            margin-bottom: 25px; 
+            font-weight: 800; 
+            line-height: 1.1;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, var(--text-main), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p { 
+            font-size: 1.3rem; 
+            margin-bottom: 40px; 
+            color: var(--text-muted);
+            line-height: 1.7;
+        }
+        
+        .hero-image-wrapper {
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            height: 70vh;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.15);
+            z-index: 5;
+            animation: floatImage 8s infinite ease-in-out;
+            border: 4px solid white;
+        }
+        .hero-image {
+            width: 100%; height: 100%; object-fit: cover;
+            transform: scale(1.05); /* slightly zoom to avoid edge clipping on pan */
+        }
+        
+        @keyframes panBg { from { background-position: 0 0; } to { background-position: 1000px 1000px; } }
+        @keyframes floatImage { 
+            0%, 100% { transform: translateY(-50%) rotate(0deg); }
+            50% { transform: translateY(-45%) rotate(1.5deg); }
+        }
+
+        .badge { background: var(--alert-error); color: white; padding: 2px 6px; border-radius: 50%; font-size: 0.75rem; position: relative; top: -10px; right: 5px; display: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>AgriPortal</a>
+            <ul class="nav-links">
+                <li><a href="index.html" style="color:var(--primary)">Home</a></li>
+                <li><a href="explore.html">Explore Products</a></li>
+                <li><a href="cart.html">Cart <span id="cart-badge" class="badge">0</span></a></li>
+                <li><a href="buyer_profile.html">Profile</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="user-info-name" style="color: white; display: none;">Loading...</span>
+                <a href="#" id="logout-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero-container">
+        <div class="hero-bg"></div>
+        <div class="blob-1"></div>
+        <div class="blob-2"></div>
+        
+        <div class="container" style="display:flex; width: 100%; position: relative;">
+            <div class="hero hero-content slide-up">
+                <div style="display:inline-block; padding: 6px 16px; background: rgba(16, 185, 129, 0.15); color: var(--primary-dark); font-weight: 700; border-radius: 20px; margin-bottom: 20px; font-size: 0.9rem;">
+                    🚀 The Future of Agriculture
+                </div>
+                <h1>Fresh Produce,<br>Directly to You</h1>
+                <p>Support local farmers by buying directly from the source. Get the absolute freshest harvest at prices that benefit everyone.</p>
+                <div style="display:flex; gap:20px;">
+                    <a href="explore.html" class="btn btn-primary" style="font-size: 1.15rem; padding: 18px 35px;">Start Shopping</a>
+                    <a href="register.html" class="btn btn-outline" style="font-size: 1.15rem; padding: 18px 35px; background: white; border: 2px solid #e2e8f0; color: var(--text-main);">Join as Farmer</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="hero-image-wrapper">
+            <img class="hero-image" src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=MnwzNjUyOXwwfDF8c2VhcmNofDF8fGFncmljdWx0dXJlfGVufDB8fHx8MTY4MzEwMjI1Mg&ixlib=rb-4.0.3&q=80&w=1080" alt="Agriculture">
+        </div>
+    </div>
+
+    <div class="container" style="padding: 100px 20px; text-align: center; position: relative; z-index:10;">
+        <h2 style="font-size: 3rem; font-weight: 800; color: var(--text-main); margin-bottom: 60px; letter-spacing: -1px;">Why Choose <span style="color:var(--primary);">AgriPortal</span>?</h2>
+        <div class="grid grid-3">
+            <div class="card glass-panel interactive-hover" style="padding: 50px 30px;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">🌱</div>
+                <h3 style="color: var(--text-main); margin-bottom: 15px; font-size:1.6rem; font-weight:800;">100% Fresh Tracked</h3>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">Harvested directly by farmers and delivered to your doorstep without middlemen. Track your order live.</p>
+            </div>
+            <div class="card glass-panel interactive-hover" style="padding: 50px 30px;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">⚖️</div>
+                <h3 style="color: var(--text-main); margin-bottom: 15px; font-size:1.6rem; font-weight:800;">Fair Transparent Prices</h3>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">Farmers get what they deserve, and you pay less than supermarket prices directly to the source.</p>
+            </div>
+            <div class="card glass-panel interactive-hover" style="padding: 50px 30px;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">🤝</div>
+                <h3 style="color: var(--text-main); margin-bottom: 15px; font-size:1.6rem; font-weight:800;">Sustainable Community</h3>
+                <p style="color: var(--text-muted); font-size: 1.05rem;">Build a healthy, sustainable future by actively supporting local agricultural ecosystems in your area.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/buyer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navbar = document.querySelector('.navbar');
+            navbar.classList.add('scrolled'); // Force glass on hero for readability
+        });
+    </script>
+</body>
+</html>

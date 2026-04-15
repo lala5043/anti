@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore - Agriculture Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .badge { background: var(--alert-error); color: white; padding: 2px 6px; border-radius: 50%; font-size: 0.75rem; position: relative; top: -10px; right: 5px; display: none; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>AgriPortal</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="explore.html" style="color:var(--primary)">Explore Products</a></li>
+                <li><a href="cart.html">Cart <span id="cart-badge" class="badge">0</span></a></li>
+                <li><a href="tracking.html">My Orders</a></li>
+                <li><a href="buyer_profile.html">Profile</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="user-info-name">Loading...</span>
+                <a href="#" id="logout-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-wrapper container">
+        <div class="page-header" style="display:flex; flex-direction:column; align-items:flex-start; gap: 20px;">
+            <h1>Discover Fresh Produce</h1>
+            
+            <div class="glass-panel" style="width: 100%; padding: 20px; display: flex; gap: 15px; flex-wrap: wrap;">
+                <div style="flex: 2; min-width: 250px;">
+                    <input type="text" id="searchInput" class="form-control" placeholder="Search for tomatoes, corn...">
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <select id="catSelect" class="form-select">
+                        <option value="">All Categories</option>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Grains">Grains</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Meat">Meat</option>
+                    </select>
+                </div>
+                <div style="flex: 1; min-width: 150px;">
+                    <select id="sortSelect" class="form-select">
+                        <option value="newest">Newest First</option>
+                        <option value="price_asc">Price: Low to High</option>
+                        <option value="price_desc">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div id="productsGrid" class="grid grid-4" style="margin-top: 30px;">
+            <!-- Rendered by JS -->
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/buyer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof window.initExplore === 'function') {
+                window.initExplore();
+            }
+        });
+    </script>
+</body>
+</html>

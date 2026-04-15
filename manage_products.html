@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Products - Farmer Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="farmer_dashboard.html" class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>AgriPortal Farmer</a>
+            <ul class="nav-links">
+                <li><a href="farmer_dashboard.html">Dashboard</a></li>
+                <li><a href="manage_products.html" style="color:var(--primary)">My Products</a></li>
+                <li><a href="farmer_profile.html">Profile</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="user-info-name">Loading...</span>
+                <a href="#" id="logout-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-wrapper container">
+        <div class="page-header">
+            <h1>Manage Products</h1>
+            <button id="openAddModalBtn" class="btn btn-primary">+ Add New Product</button>
+        </div>
+
+        <!-- Add/Edit Modal (Hidden by default) -->
+        <div id="productModal" class="glass-panel" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); z-index: 1001; padding:30px; width:100%; max-width:500px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+            <h2 id="modalTitle" style="margin-bottom: 20px;">Add Product</h2>
+            <form id="productForm">
+                <input type="hidden" id="prodId">
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="prodName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="prodCat" class="form-select" required>
+                        <option value="Vegetables">Vegetables</option>
+                        <option value="Fruits">Fruits</option>
+                        <option value="Grains">Grains</option>
+                        <option value="Dairy">Dairy</option>
+                        <option value="Meat">Meat</option>
+                    </select>
+                </div>
+                <div style="display:flex; gap: 15px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>Price (₹)</label>
+                        <input type="number" id="prodPrice" step="0.01" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Unit Type</label>
+                        <select id="prodUnit" class="form-select" required>
+                            <option value="Kg">Per Kg</option>
+                            <option value="Lbs">Per Lbs</option>
+                            <option value="Tonne">Per Tonne</option>
+                            <option value="Box">Per Box</option>
+                            <option value="Dozen">Per Dozen</option>
+                            <option value="Piece">Per Piece</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="display:flex; gap: 15px;">
+                    <div class="form-group" style="flex:1;">
+                        <label>Stock Qty</label>
+                        <input type="number" id="prodStock" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Min. Order Qty.</label>
+                        <input type="number" id="prodMoq" class="form-control" value="1" min="1" required>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label>Harvest Date</label>
+                        <input type="date" id="prodHarvest" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Description (Optional)</label>
+                    <textarea id="prodDesc" class="form-textarea" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <input type="file" id="prodImage" name="image" accept="image/*" class="form-control">
+                    <small style="color:var(--text-muted)">Leave empty to keep existing image when editing.</small>
+                </div>
+                <div style="display:flex; gap:10px; justify-content: flex-end; margin-top:20px;">
+                    <button type="button" id="closeModalBtn" class="btn btn-outline">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
+
+        <div id="modalOverlay" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:1000; backdrop-filter:blur(3px);"></div>
+
+        <div class="card glass-panel slide-up">
+            <div style="overflow-x: auto;">
+                <table id="productsTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Category</th>
+                            <th>Price / Unit</th>
+                            <th>Stock (MOQ)</th>
+                            <th>Harvest Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Dynamically populated via JS -->
+                        <tr><td colspan="6" style="text-align:center;">Loading products...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/farmer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof window.initManageProducts === 'function') {
+                window.initManageProducts();
+            }
+        });
+    </script>
+</body>
+</html>

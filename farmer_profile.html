@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Farmer Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="farmer_dashboard.html" class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>AgriPortal Farmer</a>
+            <ul class="nav-links">
+                <li><a href="farmer_dashboard.html">Dashboard</a></li>
+                <li><a href="manage_products.html">My Products</a></li>
+                <li><a href="farmer_profile.html" style="color:var(--primary)">Profile</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="user-info-name">Loading...</span>
+                <a href="#" id="logout-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="dashboard-wrapper container">
+        <div class="page-header">
+            <h1>My Profile</h1>
+        </div>
+        <div class="card glass-panel slide-up" style="max-width: 600px;">
+            <div class="card-body">
+                <form id="profileForm">
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <img id="profPicPreview" src="https://placehold.co/150x150?text=Profile" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid #eee;">
+                        <input type="file" id="profPic" accept="image/*" class="form-control" style="margin-top: 15px; width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="profName" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email Address</label>
+                        <input type="email" id="profEmail" class="form-control" readonly style="background: #eee; cursor: not-allowed; border-color: #ddd;">
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="profPhone" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Update Profile</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="js/main.js"></script>
+    <script src="js/farmer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const form = document.getElementById('profileForm');
+            const res = await window.apiCall('farmer.php?action=get_profile');
+            if(res.status === 'success') {
+                document.getElementById('profName').value = res.profile.name;
+                document.getElementById('profEmail').value = res.profile.email;
+                document.getElementById('profPhone').value = res.profile.phone;
+                if(res.profile.profile_pic) {
+                    document.getElementById('profPicPreview').src = res.profile.profile_pic;
+                }
+            }
+            form.addEventListener('submit', async(e) => {
+                e.preventDefault();
+                const payload = new FormData();
+                payload.append('name', document.getElementById('profName').value);
+                payload.append('phone', document.getElementById('profPhone').value);
+                
+                const picFile = document.getElementById('profPic').files[0];
+                if(picFile) payload.append('profile_pic', picFile);
+
+                const upd = await window.apiCall('farmer.php?action=update_profile', 'POST', payload);
+                if(upd.status === 'success') {
+                    window.showToast('Profile updated!');
+                    document.getElementById('user-info-name').textContent = payload.get('name');
+                    if(picFile) setTimeout(() => location.reload(), 1000);
+                } else { window.showToast(upd.message, 'error'); }
+            });
+        });
+    </script>
+</body>
+</html>

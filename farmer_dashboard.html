@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Farmer Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="farmer_dashboard.html" class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>AgriPortal Farmer</a>
+            <ul class="nav-links">
+                <li><a href="farmer_dashboard.html" style="color:var(--primary)">Dashboard</a></li>
+                <li><a href="manage_products.html">My Products</a></li>
+                <li><a href="farmer_profile.html">Profile</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="user-info-name">Loading...</span>
+                <a href="#" id="logout-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-wrapper container">
+        <div class="page-header">
+            <h1>Analytics Overview</h1>
+        </div>
+
+        <div class="grid grid-3">
+            <div class="card glass-panel slide-up" style="animation-delay: 0.1s;">
+                <div class="card-body">
+                    <h3 style="color: var(--text-muted); margin-bottom: 5px;">Total Products</h3>
+                    <div id="stat-products" style="font-size: 2.5rem; font-weight: 700; color: var(--text-main);">0</div>
+                </div>
+            </div>
+            
+            <div class="card glass-panel slide-up" style="animation-delay: 0.2s;">
+                <div class="card-body">
+                    <h3 style="color: var(--text-muted); margin-bottom: 5px;">Estimated Inventory Value</h3>
+                    <div id="stat-value" style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">₹0.00</div>
+                </div>
+            </div>
+
+            <div class="card glass-panel slide-up" style="animation-delay: 0.3s; background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%); color: white; border: none;">
+                <div class="card-body">
+                    <h3 style="color: rgba(255,255,255,0.8); margin-bottom: 5px;">Total Earnings</h3>
+                    <div id="stat-earnings" style="font-size: 2.5rem; font-weight: 700;">₹0.00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card glass-panel slide-up" style="animation-delay: 0.4s; margin-top: 40px;">
+            <div class="card-body">
+                <h3>Pending Fulfillment Orders</h3>
+                <p style="color:var(--text-muted); margin-top: 10px;">Manage your incoming orders and update their tracking status.</p>
+                
+                <div style="overflow-x: auto; margin-top: 20px;">
+                    <table id="ordersTable">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Buyer Details</th>
+                                <th>Items Ordered</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="5" style="text-align:center; padding: 30px; color:var(--text-muted);">Loading orders...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/farmer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof window.initFarmerDashboard === 'function') {
+                window.initFarmerDashboard();
+            }
+        });
+    </script>
+</body>
+</html>

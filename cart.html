@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart - Agriculture Portal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .badge { background: var(--alert-error); color: white; padding: 2px 6px; border-radius: 50%; font-size: 0.75rem; position: relative; top: -10px; right: 5px; display: none; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; display: none; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+        .modal-content { padding: 30px; position: relative; max-height: 90vh; overflow-y: auto; }
+        @media print {
+            body.printing-invoice * { visibility: hidden; }
+            body.printing-invoice #invoiceModal, body.printing-invoice #invoiceModal * { visibility: visible; }
+            body.printing-invoice #invoiceModal { position: absolute; left: 0; top: 0; padding: 0; background: white; margin: 0; width: 100%; }
+            body.printing-invoice .no-print-area { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="brand-logo"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/></svg>AgriPortal</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="explore.html">Explore Products</a></li>
+                <li><a href="cart.html" style="color:var(--primary)">Cart <span id="cart-badge" class="badge">0</span></a></li>
+                <li><a href="tracking.html">My Orders</a></li>
+                <li><a href="buyer_profile.html">Profile</a></li>
+            </ul>
+            <div class="user-info">
+                <span id="user-info-name">Loading...</span>
+                <a href="#" id="logout-btn" class="btn btn-secondary" style="padding: 8px 16px; font-size: 0.9rem;">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="dashboard-wrapper container">
+        <div class="page-header">
+            <h1>Shopping Cart</h1>
+        </div>
+
+        <div style="display:flex; gap: 30px; flex-wrap: wrap;">
+            
+            <div style="flex: 2; min-width: 60%;">
+                <div class="card glass-panel slide-up">
+                    <div style="overflow-x: auto;">
+                        <table id="cartTable">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Subtotal</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div style="flex: 1; min-width: 30%;">
+                <div class="card glass-panel slide-up" style="animation-delay: 0.2s; padding: 30px;">
+                    <h2 style="color: var(--primary-dark); margin-bottom: 20px; font-size: 1.5rem; padding-bottom: 10px; border-bottom: 1px solid #eee;">Order Summary</h2>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 1.1rem; color: var(--text-muted);">
+                        <span>Subtotal</span>
+                        <span id="cartTotal" style="font-weight: 700; color: var(--text-main);">₹0.00</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 30px; font-size: 1.1rem; color: var(--text-muted);">
+                        <span>Delivery</span>
+                        <span style="font-weight: 700; color: var(--text-main);">Free</span>
+                    </div>
+                    <button id="checkoutBtn" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;" disabled>Proceed to Checkout</button>
+                    <p style="margin-top: 20px; font-size: 0.85rem; color: #888; text-align: center;">Secure 128-bit SSL encrypted checkout</p>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="addressModal" class="modal-overlay">
+        <div class="modal-content glass-panel slide-up" style="max-width: 500px; width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h2 style="color: var(--primary-dark);">Checkout Details</h2>
+                <button type="button" class="btn" style="background:transparent; color:#555; padding: 5px 10px; font-size: 1.5rem;" onclick="closeAddressModal()">&times;</button>
+            </div>
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" id="checkoutName" class="form-control" placeholder="Your Name">
+            </div>
+            <div class="form-group">
+                <label>Phone Number</label>
+                <input type="text" id="checkoutPhone" class="form-control" placeholder="Your Phone">
+            </div>
+            <div class="form-group">
+                <label>Shipping Address</label>
+                <textarea id="checkoutAddress" class="form-textarea" rows="4" placeholder="Enter complete shipping address..."></textarea>
+            </div>
+            <button id="confirmOrderBtn" class="btn btn-primary" style="width: 100%;">Confirm Order</button>
+        </div>
+    </div>
+
+    <div id="invoiceModal" class="modal-overlay">
+        <div class="modal-content glass-panel slide-up" style="max-width: 800px; width: 100%;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;" class="no-print-area">
+                <h2 style="color: var(--primary-dark);">Order Status: Success</h2>
+                <button type="button" class="btn" style="background:transparent; color:#555; padding: 5px 10px; font-size: 1.5rem;" onclick="closeInvoiceModal()">&times;</button>
+            </div>
+            <div id="invoiceContent" style="padding: 20px; background: white; border-radius: 12px; margin-bottom: 20px; border: 1px solid #eee;">
+                <!-- Filled by JS -->
+            </div>
+            <div style="display: flex; gap: 15px;" class="no-print-area">
+                <button id="downloadBillBtn" class="btn btn-primary" style="flex: 1;">Download Bill (PDF)</button>
+                <a href="tracking.html" class="btn btn-secondary" style="flex: 1; text-align: center;">View Orders</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script src="js/buyer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof window.initCart === 'function') {
+                window.initCart();
+            }
+        });
+    </script>
+</body>
+</html>
